@@ -29,7 +29,7 @@
     "test": "test"
   },
   "scripts": {
-    "prepublishOnly": "",
+    "prepublishOnly": "node ./script/prepublishOnly.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
