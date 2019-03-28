@@ -2,12 +2,26 @@
   "name": "ws-lazy-node",
   "version": "1.0.0",
   "private": true,
+  "description": "",
+  "homepage": "https://github.com/bluelovers/ws-lazy-node#readme",
+  "bugs": {
+    "url": "https://github.com/bluelovers/ws-lazy-node/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluelovers/ws-lazy-node.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "sort-package-json": "oao run-script \"sort-package-json2\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
   },
   "devDependencies": {
     "@bluelovers/tsconfig": "^1.0.1",

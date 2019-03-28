@@ -6,21 +6,40 @@ import moment = require("moment");
 
 export const enum EnumSemverDateStyle
 {
+	/**
+	 * date style semver (20190.1.329002)
+	 */
 	YEAR = 0,
+	/**
+	 * idea style semver (190.1.329002)
+	 */
 	IDEA = 1
 }
 
 export interface IOptions
 {
 	timestamp?: moment.MomentInput | moment.Moment,
+	/**
+	 * major version
+	 */
 	major?: number | string,
+	/**
+	 * minor version
+	 */
 	minor?: number | string,
+	/**
+	 * padZero for major
+	 */
 	padZero?: number;
+	/**
+	 * output style
+	 */
 	style?: EnumSemverDateStyle
 }
 
 /**
  * create a idea style semver (190.1.329002)
+ * 自動生成類似 IDEA 的版本編號風格
  */
 export function date(old?: string, options: IOptions = {})
 {
@@ -97,16 +116,19 @@ export function date(old?: string, options: IOptions = {})
 	let yf = options.style ? `YY` : `YYYY`;
 
 	major = String(major || 0).padStart(options.padZero, '0');
-	patch = String(patch).padStart(3, '0')
+	patch = String(patch).padStart(3, '0');
 
 	return timestamp.format(`${yf}${major}.${minor}.MDD${patch}`)
 }
 
 export namespace date
 {
+	/**
+	 * [year, month, date, patch, major, minor]
+	 */
 	export function parse(version: string,
 		options: IOptions = {},
-	): [number /*year*/, number /*year*/, number /*month*/, number /*date*/, number /*major*/, number /*minor*/]
+	): [number /*year*/, number /*month*/, number /*date*/, number /*patch*/, number /*major*/, number /*minor*/]
 	{
 		if (typeof version === 'string')
 		{
@@ -117,16 +139,17 @@ export namespace date
 
 			if (options.style)
 			{
-				if (version.match(/^(\d{2})(\d*)\.(\d+)\.(\d)(\d{2})(\d*)$/))
+				if (version.match(/^(\d{2})(\d*)\.(\d+)\.(\d?)(\d{2}?)(\d*?)$/))
 				{
 					// @ts-ignore
-					return [(RegExp.$1 | 0) + 2000, RegExp.$4, RegExp.$5, RegExp.$6, RegExp.$2, RegExp.$3].map(v => (v as any) | 0)
+					return [(RegExp.$1 | 0) + 2000, RegExp.$4, RegExp.$5, RegExp.$6, RegExp.$2, RegExp.$3].map(
+						v => (v as any) | 0)
 				}
 
 				return null;
 			}
 
-			if (version.match(/^(\d{4})(\d*)\.(\d+)\.(\d)(\d{2})(\d*)$/))
+			if (version.match(/^(\d{4})(\d*)\.(\d+)\.(\d?)(\d{2}?)(\d*?)$/))
 			{
 				// @ts-ignore
 				return [RegExp.$1, RegExp.$4, RegExp.$5, RegExp.$6, RegExp.$2, RegExp.$3].map(v => (v as any) | 0)

@@ -1,18 +1,41 @@
 {
   "name": "@lazy-node/semver",
-  "version": "190.0.329003",
-  "description": "",
+  "version": "190.0.329001",
+  "private": false,
+  "description": "create a idea style semver",
+  "keywords": [
+    "auto",
+    "date",
+    "format",
+    "idea",
+    "semantic",
+    "semantic version",
+    "semver",
+    "ver",
+    "version"
+  ],
+  "homepage": "https://github.com/bluelovers/ws-lazy-node/blob/HEAD/packages/semver#readme",
+  "bugs": {
+    "url": "https://github.com/bluelovers/ws-lazy-node/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluelovers/ws-lazy-node.git"
+  },
   "license": "ISC",
   "author": "",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "prepublishOnly": "",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "moment": "^2.24.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
