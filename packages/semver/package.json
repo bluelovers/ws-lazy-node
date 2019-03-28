@@ -1,0 +1,18 @@
+{
+  "name": "@lazy-node/semver",
+  "version": "190.0.329003",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "prepublishOnly": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
+  }
+}
