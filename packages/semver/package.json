@@ -1,6 +1,6 @@
 {
   "name": "@lazy-node/semver",
-  "version": "190.0.329001",
+  "version": "190.0.329002",
   "private": false,
   "description": "create a idea style semver",
   "keywords": [
