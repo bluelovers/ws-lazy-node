@@ -1,11 +1,14 @@
 
 import fs = require("fs");
+import path = require("path");
 import date from '../index';
 
-let pkg = JSON.parse(fs.readFileSync('../package.json').toString());
+let file = path.join(__dirname, '../package.json');
+
+let pkg = JSON.parse(fs.readFileSync(file).toString());
 
 console.log(`old: ${pkg.version}`);
 pkg.version = date(pkg.version);
 console.log(`new: ${pkg.version}`);
 
-fs.writeFileSync('../package.json', JSON.stringify(pkg, null, 2));
+fs.writeFileSync(file, JSON.stringify(pkg, null, 2));
