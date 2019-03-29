@@ -2,6 +2,11 @@
 
     create a idea style semver 自動生成類似 IDEA 的版本編號風格
 
+> this module will fail when year > 2099 or year < 2010
+
+## API
+
+> see [here](index.d.ts)
 
 ## demo
 

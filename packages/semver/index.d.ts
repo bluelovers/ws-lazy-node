@@ -26,6 +26,7 @@ export interface IOptions {
      * padZero for major
      */
     padZero?: number;
+    padZeroPatch?: number;
     /**
      * output style
      */
@@ -37,9 +38,25 @@ export interface IOptions {
  */
 export declare function date(old?: string, options?: IOptions): string;
 export declare namespace date {
-    /**
-     * [year, month, date, patch, major, minor]
-     */
-    function parse(version: string, options?: IOptions): [number, number, number, number, number, number];
+    type IParseReturnArray = [number, number, number, number, number, number];
+    interface IParseReturnObject {
+        /**
+         * YYYY only allow [2010-2099]
+         */
+        year: number;
+        /**
+         * M, if use for moment need -1
+         */
+        month: number;
+        /**
+         * D
+         */
+        date: number;
+        patch: number;
+        major: number;
+        minor: number;
+    }
+    type IParseReturn = IParseReturnArray | IParseReturnArray & IParseReturnObject;
+    function parse(version: string, options?: IOptions): IParseReturn;
 }
 export default date;

@@ -31,6 +31,7 @@ export interface IOptions
 	 * padZero for major
 	 */
 	padZero?: number;
+	padZeroPatch?: number;
 	/**
 	 * output style
 	 */
@@ -48,12 +49,14 @@ export function date(old?: string, options: IOptions = {})
 	let major: string | number = (options.major as number) | 0;
 	let minor: string | number = (options.minor as number) | 0;
 
-	if (options.style == null)
+	let style = options.style;
+
+	if (style == null)
 	{
-		options.style = EnumSemverDateStyle.IDEA;
+		style = EnumSemverDateStyle.IDEA;
 	}
 
-	let _v1 = date.parse(old, options);
+	let _v1: date.IParseReturn = date.parse(old, options);
 
 	if (!major && _v1)
 	{
@@ -65,7 +68,7 @@ export function date(old?: string, options: IOptions = {})
 		minor = _v1[5] | 0;
 	}
 
-	let _v2: ReturnType<typeof date.parse>;
+	let _v2: date.IParseReturn;
 
 	let timestamp = options.timestamp;
 
@@ -113,46 +116,88 @@ export function date(old?: string, options: IOptions = {})
 		}
 	}
 
-	let yf = options.style ? `YY` : `YYYY`;
+	let year = timestamp.year();
+
+	if (year > 2099 || year < 2010)
+	{
+		throw new RangeError(`year must in [2010-2099]: ${year}`);
+	}
+
+	let yf = style ? `YY` : `YYYY`;
 
 	major = String(major || 0).padStart(options.padZero, '0');
-	patch = String(patch).padStart(3, '0');
+	patch = String(patch).padStart(options.padZeroPatch || 3, '0');
 
 	return timestamp.format(`${yf}${major}.${minor}.MDD${patch}`)
 }
 
 export namespace date
 {
-	/**
-	 * [year, month, date, patch, major, minor]
-	 */
+	export type IParseReturnArray = [number /*year*/, number /*month*/, number /*date*/, number /*patch*/, number /*major*/, number /*minor*/];
+	export interface IParseReturnObject
+	{
+		/**
+		 * YYYY only allow [2010-2099]
+		 */
+		year: number,
+		/**
+		 * M, if use for moment need -1
+		 */
+		month: number,
+		/**
+		 * D
+		 */
+		date: number,
+
+		patch: number,
+		major: number,
+		minor: number,
+	}
+
+	export type IParseReturn = IParseReturnArray | IParseReturnArray & IParseReturnObject;
+
 	export function parse(version: string,
 		options: IOptions = {},
-	): [number /*year*/, number /*month*/, number /*date*/, number /*patch*/, number /*major*/, number /*minor*/]
+	): IParseReturn
 	{
 		if (typeof version === 'string')
 		{
-			if (options.style == null)
+			let style = options.style;
+
+			if (style == null)
 			{
-				options.style = EnumSemverDateStyle.IDEA;
+				style = EnumSemverDateStyle.IDEA;
 			}
 
-			if (options.style)
-			{
-				if (version.match(/^(\d{2})(\d*)\.(\d+)\.(\d?)(\d{2}?)(\d*?)$/))
-				{
-					// @ts-ignore
-					return [(RegExp.$1 | 0) + 2000, RegExp.$4, RegExp.$5, RegExp.$6, RegExp.$2, RegExp.$3].map(
-						v => (v as any) | 0)
-				}
+			let arr: IParseReturn;
+			let re = new RegExp(`^(\\d{${style ? 2 : 4}})(\\d*)\\.(\\d+)(?:\\.(1[012]|[1-9])(?:(\\d{2})(\\d*?))?)?$`);
 
-				return null;
-			}
-
-			if (version.match(/^(\d{4})(\d*)\.(\d+)\.(\d?)(\d{2}?)(\d*?)$/))
+			if (version.match(re))
 			{
 				// @ts-ignore
-				return [RegExp.$1, RegExp.$4, RegExp.$5, RegExp.$6, RegExp.$2, RegExp.$3].map(v => (v as any) | 0)
+				arr = [RegExp.$1, RegExp.$4, RegExp.$5, RegExp.$6, RegExp.$2, RegExp.$3]
+
+				if (style)
+				{
+					arr[0] = (arr[0] | 0) + 2000;
+				}
+			}
+
+			if (arr)
+			{
+				// @ts-ignore
+				arr = arr.map(v => (v as any) | 0);
+
+				let [year, month, date, patch, major, minor] = arr;
+
+				if (year > 2099 || year < 2010)
+				{
+					throw new RangeError(`year must in [2010-2099]: ${year}`);
+				}
+
+				return Object.assign(arr, {
+					year, month, date, patch, major, minor,
+				})
 			}
 		}
 
